@@ -4,9 +4,11 @@ import android.app.Fragment
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
+import android.widget.GridView
 import kotlinx.android.synthetic.main.activity_match.*
 
 class MatchActivity : AppCompatActivity() {
+    val listTeam = ArrayList<Team>()
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -45,6 +47,13 @@ class MatchActivity : AppCompatActivity() {
         val t3 =  Team("SN",p5, p6)
         val t4 =  Team("CR",p7, p8)
         val t5 =  Team("CB",p9, p10)
+
+        listTeam.add(t1)
+        listTeam.add(t2)
+        listTeam.add(t3)
+        listTeam.add(t4)
+        listTeam.add(t5)
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,6 +62,9 @@ class MatchActivity : AppCompatActivity() {
 
         createTeams()
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        val gridview: GridView = findViewById(R.id.gvTeam)
+        gridview.adapter = ImageAdapter(this,listTeam)
 
 
     }
