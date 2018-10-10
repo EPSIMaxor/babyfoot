@@ -1,79 +1,90 @@
 package com.babyfoot.maxor.babyfoot
 
-import android.app.Fragment
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import android.widget.GridView
+import android.view.View
+import android.widget.*
 import kotlinx.android.synthetic.main.activity_match.*
 
-class MatchActivity : AppCompatActivity() {
-    val listTeam = ArrayList<Team>()
+class MatchActivity : AppCompatActivity(), View.OnClickListener {
+    var scoreT1: Int = 0
+    var scoreT2: Int = 0
+    var list = ArrayList<Team>()
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_home -> {
-                message.setText(R.string.title_home)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_dashboard -> {
-                message.setText(R.string.title_dashboard)
-                val fraghome = HomeFragment.newInstance()
-//                pushFragment(fraghome)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-                message.setText(R.string.title_notifications)
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
-
-    private fun createTeams() {
-        val p1 =  Person("Jacque","Perreau")
-        val p2 =  Person("Patrick","Orain")
-        val p3 =  Person("Samuel","nurib")
-        val p4 =  Person("Claire","rego")
-        val p5 =  Person("Clement","Benoit")
-        val p6 =  Person("Pierre","Faril")
-        val p7 =  Person("Damien","Quiro")
-        val p8 =  Person("Aurelien","girgon")
-        val p9 =  Person("Maxime","Duffeau")
-        val p10 =  Person("Enzo","Rotin")
-
-        val t1 =  Team("JP", p1, p2)
-        val t2 =  Team("PO",p3, p4)
-        val t3 =  Team("SN",p5, p6)
-        val t4 =  Team("CR",p7, p8)
-        val t5 =  Team("CB",p9, p10)
-
-        listTeam.add(t1)
-        listTeam.add(t2)
-        listTeam.add(t3)
-        listTeam.add(t4)
-        listTeam.add(t5)
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_match)
+//        val tvT1: TextView = findViewById(R.id.tvT1)
+//        val tvT2: TextView = findViewById(R.id.tvT2)
+//        val tvS1: TextView = findViewById(R.id.tvS1)
+//        val tvS2: TextView = findViewById(R.id.tvS2)
+//        val btnP1: Button = findViewById(R.id.btnP1)
+//        val btnP2: Button = findViewById(R.id.btnP2)
+//        val btnEnd: Button = findViewById(R.id.btnEnd)
+        btnP1.setOnClickListener(this)
+        btnP2.setOnClickListener(this)
+        btnEnd.setOnClickListener(this)
 
-        createTeams()
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-        val gridview: GridView = findViewById(R.id.gvTeam)
-        gridview.adapter = ImageAdapter(this,listTeam)
-
-
+            list = intent.extras.getSerializable("Teams") as ArrayList<Team>
+//            tvT1.text = list.get(0).name
+//            tvT2.text = list.get(1).name
+//            tvS1.text = scoreT1.toString()
+//            tvS2.text = scoreT2.toString()
     }
 
+    override fun onStart() {
+        super.onStart()
+        tvT1.text = list.get(0).name
+        tvT2.text = list.get(1).name
+        tvS1.text = scoreT1.toString()
+        tvS2.text = scoreT2.toString()
+    }
 
-//    private fun pushFragment(fragment: Fragment?) {
-//        val transaction = supportFragmentManager.beginTransaction()
-//        transaction.replace(R.id.container, fragment)
-//        transaction.addToBackStack(null)
-//    transaction.commit()
-//}
+    override fun onStop() {
+        super.onStop()
+        saveScoreToPrefs()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        scoreT1 = restoreScoreFromPrefs()
+    }
+
+    override fun onClick(v: View) {
+        when(v.id) {
+            R.id.btnP1 -> {
+                scoreT1++
+                tvS1.text = scoreT1.toString()
+            }
+            R.id.btnP2 -> {
+                scoreT2++
+                tvS2.text = scoreT2.toString()
+            }
+            R.id.btnEnd -> {
+//              start new activity
+                scoreT1 = 0
+                scoreT2 = 0
+                tvS1.text = scoreT1.toString()
+                tvS2.text = scoreT2.toString()
+            }
+        }
+    }
+
+    /** Attempts to read the externally saved counter value and update the model.   */
+    protected fun restoreScoreFromPrefs(): Int {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        val value = sharedPref.getInt("Score1", 0)
+        return value
+    }
+
+    /** Saves the counter value externally.  */
+    protected fun saveScoreToPrefs() {
+        val sharedPref = getPreferences(Context.MODE_PRIVATE)
+        val editor = sharedPref.edit()
+        editor.putInt("Score1", scoreT1)
+        editor.commit()
+    }
 }

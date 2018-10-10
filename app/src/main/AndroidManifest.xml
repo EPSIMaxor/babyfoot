@@ -24,6 +24,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.babyfoot.maxor.babyfoot.MainActivity" />
         </activity>
+        <activity android:name=".MatchMakingActivity"></activity>
     </application>
 
 </manifest>
