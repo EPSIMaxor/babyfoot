@@ -11,6 +11,7 @@ import android.widget.GridView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_match.*
 import kotlinx.android.synthetic.main.activity_match_making.*
+import org.jetbrains.anko.intentFor
 import java.io.Serializable
 
 class MatchMakingActivity : AppCompatActivity() {
@@ -23,12 +24,7 @@ class MatchMakingActivity : AppCompatActivity() {
 //        val btnValidez: Button = findViewById(R.id.btnValidez)
         btnValidez.setOnClickListener {
             teams = match(listTeam)
-            val i: Intent = Intent(this,MatchActivity::class.java)
-            i.putExtra(
-                    "Teams",
-                    teams as Serializable
-            )
-            startActivity(i)
+            startActivity(intentFor<MatchActivity>("Teams" to teams))
         }
 
         createTeams()

@@ -9,7 +9,7 @@
     <GridView
         android:id="@+id/gvTeam"
         android:layout_width="match_parent"
-        android:layout_height="472dp"
+        android:layout_height="492dp"
         android:dividerHeight="1dp"
         android:gravity="center"
         android:horizontalSpacing="10dp"
