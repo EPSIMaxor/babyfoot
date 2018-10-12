@@ -10,36 +10,23 @@ import java.sql.Connection
 import java.sql.DriverManager
 import android.widget.TextView
 import org.jetbrains.anko.toast
+import org.json.JSONArray
+import java.net.URL
 
 
-class MainActivity : AppCompatActivity(), DBConnectionListener{
-    private val LOG_TAG = MainActivity::class.java!!.getName()
-    private var dao: Dao? = null
+class MainActivity : AppCompatActivity() {
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        dao = Dao.instance(this)
+
 
         btnStart.setOnClickListener {
-            dao!!.connect("127.0.0.1:3306", "MaxorAdmin!", "Maxor", "babyfoot");
-            startActivity(intentFor<MatchMakingActivity>())
+            var apiResponse = URL("http://localhost:3000/ticket").content
+            toast(apiResponse.toString())
+//            startActivity(intentFor<MatchMakingActivity>())
         }
     }
-
-    override fun onConnectionSuccessful() {
-        toast("Succes")
-    }
-
-    override fun onConnectionFailed() {
-        toast("failed")
-    }
-
-    override fun onConnectionStatusInfo(status: String) {
-        this.runOnUiThread {
-            toast(status)
-        }
-    }
-
 
 }
